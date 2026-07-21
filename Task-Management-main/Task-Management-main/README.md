@@ -1,4 +1,4 @@
-# 📋 Task Management System (Lakshya Corp)
+# 📋 Task Management System ( Ashutosh Singh)
 
 A clean, modern, and user-friendly Task Management System built with a Flask backend and a responsive vanilla HTML/JS/CSS frontend. The application features separate views for **Administrators** (who manage tasks and assign them to employees) and **Employees** (who track and update progress on their assigned tasks).
 
