@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Dashboard | Task Management System</title>
+  
+  <!-- Bootstrap 5 CSS (CDN) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Bootstrap Icons (CDN) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/style.css">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+</head>
+<body>
+
+  <div class="dashboard-container">
+    
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <img src="assets/logo.png" alt="Logo" class="sidebar-logo" width="32" height="32">
+        <h2 class="sidebar-brand">Lakshya Corp</h2>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-menu-item active">
+          <a href="#"><i class="bi bi-person-workspace me-2"></i> Employee panel</a>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- Top Navbar -->
+      <nav class="main-navbar">
+        <div class="d-flex align-items-center">
+          <button class="mobile-toggle me-3" id="sidebarToggle">
+            <i class="bi bi-list"></i>
+          </button>
+          <h1 class="h5 fw-bold mb-0 text-primary"><i class="bi bi-briefcase-fill me-2"></i>Task Management System</h1>
+        </div>
+        <div class="navbar-user-info">
+          <div class="text-end d-none d-sm-block">
+            <div class="navbar-user-name" id="currentUserName">Loading...</div>
+          </div>
+          <span class="navbar-user-role bg-secondary-subtle text-secondary" id="currentUserRole">Employee</span>
+          <button class="btn btn-outline-danger btn-sm ms-2 px-3 d-flex align-items-center" id="logoutBtn">
+            <i class="bi bi-box-arrow-right me-1"></i> Logout
+          </button>
+        </div>
+      </nav>
+
+      <!-- Content Body -->
+      <div class="content-body">
+        
+        <!-- Welcome Message -->
+        <div class="card border-0 shadow-sm p-4 mb-4 bg-primary text-white" style="border-radius: 12px;">
+          <h2 class="h4 fw-bold mb-1" id="welcomeMessage">Welcome back!</h2>
+          <p class="mb-0 text-white-50 small">Track your task progress and update assignments details here.</p>
+        </div>
+
+        <!-- Metrics Row -->
+        <section class="metrics-row">
+          <div class="metric-card">
+            <div class="metric-icon-box tasks">
+              <i class="bi bi-briefcase"></i>
+            </div>
+            <div>
+              <p class="metric-number" id="metricMyTotalTasks">0</p>
+              <p class="metric-label">Assigned Tasks</p>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-icon-box pending">
+              <i class="bi bi-gear-wide-connected"></i>
+            </div>
+            <div>
+              <p class="metric-number" id="metricMyPendingTasks">0</p>
+              <p class="metric-label">In Progress</p>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-icon-box completed">
+              <i class="bi bi-patch-check"></i>
+            </div>
+            <div>
+              <p class="metric-number" id="metricMyCompletedTasks">0</p>
+              <p class="metric-label">Tasks Finished</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Tasks Board Table -->
+        <article class="dashboard-section">
+          <div class="section-header">
+            <h3 class="section-title"><i class="bi bi-folder-check me-2"></i>My Task Assignments</h3>
+          </div>
+          <div class="section-body p-0">
+            <div class="table-responsive-wrapper">
+              <table class="custom-table" id="myAssignmentsTable">
+                <thead>
+                  <tr>
+                    <th>Task Details</th>
+                    <th>Priority</th>
+                    <th>Deadline</th>
+                    <th>Progress</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="myAssignmentsTableBody">
+                  <tr>
+                    <td colspan="6" class="text-center py-4 text-muted">
+                      <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
+                      Loading assignments...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Update Status Modal -->
+  <div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="statusModalLabel">Update Assignment Status</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="statusForm">
+          <input type="hidden" id="modalAssignmentId">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="statusSelect" class="form-label small fw-bold">Assignment Status</label>
+              <select class="form-select" id="statusSelect" required>
+                <option value="Pending">Pending</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+                <option value="On Hold">On Hold</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="completionRange" class="form-label small fw-bold d-flex justify-content-between">
+                <span>Completion Percentage</span>
+                <span id="completionValue">0%</span>
+              </label>
+              <input type="range" class="form-range" id="completionRange" min="0" max="100" value="0">
+            </div>
+            <div class="mb-3">
+              <label for="remarksInput" class="form-label small fw-bold">Remarks / Notes</label>
+              <textarea class="form-control" id="remarksInput" rows="3" placeholder="Explain your progress..."></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="btnSubmitStatus">Update Progress</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1055">
+    <div id="statusToast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body" id="toastMessage">Progress updated.</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap 5 JS Bundle (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Employee Dashboard JavaScript -->
+  <script src="js/employee_dashboard.js"></script>
+</body>
+</html>
